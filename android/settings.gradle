@@ -1,0 +1,3 @@
+rootProject.name = 'AndroidNative'
+
+include ':app'
