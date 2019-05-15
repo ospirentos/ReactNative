@@ -1,22 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import firebase from 'firebase';
+import { Text, View, StyleSheet, Image } from 'react-native';
 
-var config = {
-    apiKey: "AIzaSyCACvSZohBaHX3ppzApNyLLdU6-fpZKzTA",
-    authDomain: "androidnative-c2d74.firebaseapp.com",
-    databaseURL: "https://androidnative-c2d74.firebaseio.com",
-    projectId: "androidnative-c2d74",
-    storageBucket: "androidnative-c2d74.appspot.com",
-    messagingSenderId: "273543091961",
-    appId: "1:273543091961:web:0399c150c2906d49"
-};
-firebase.initializeApp(config);
-
-const itemsRef = firebase.database().ref('items');
-itemsRef.on('value', (snapshot) => {
-  console.log(snapshot.val());
-});
 
 const styles = StyleSheet.create({
   text: {
@@ -78,13 +62,21 @@ const styles = StyleSheet.create({
     height:200,
     width: 275,
     backgroundColor: 'red',
+    justifyContent: 'center',
+    flexDirection: 'row',
     marginTop: 50
   },
   userCard: {
     height:200,
     width: 275,
     backgroundColor: 'red',
+    justifyContent: 'center',
+    flexDirection: 'row',
     marginTop: 50
+  },
+  profilePic: {
+    width: 150,
+    height: 200
   }
 });
 
@@ -111,14 +103,46 @@ class Blink extends Component {
 }
 
 export default class HelloWorldApp extends Component {
-  componentDidMount(){
-    /*const itemsRef = firebase.database().ref('items');
-    const item = {
-      title: "test",
-      user: "test2"
+  constructor(props) {
+    const image1 = require('./static/profilepic1.jpg');
+    const image2 = require('./static/profilepic2.jpg');
+    const image3 = require('./static/profilepic3.jpg');
+    const image4 = require('./static/profilepic4.jpg');
+    const image5 = require('./static/profilepic5.jpg');
+    let listOfImages = [];
+    listOfImages.push(image2);
+    listOfImages.push(image3);
+    listOfImages.push(image4);
+    listOfImages.push(image5);
+    super(props);
+    this.state = {
+      imagePointer: 0,
+      imageToShow: image2,
+      profilePic: image1,
+      list : listOfImages
     }
-    itemsRef.push(item);*/
   }
+
+  onPressHandlerLeft = () => {
+    let imagePointer = this.state.imagePointer;
+    imagePointer = (imagePointer - 1) < 0 ?
+      0 : ((imagePointer - 1) % this.state.list.length);
+      this.setState (previousState => ({
+        imagePointer : imagePointer,
+        imageToShow: this.state.list[imagePointer]
+      }));
+  }
+
+  onPressHandlerRight = () => {
+    let imagePointer = this.state.imagePointer;
+    imagePointer = (imagePointer + 1) > this.state.list.length-1 ?
+    this.state.list.length-1 : ((imagePointer + 1) % this.state.list.length);
+    this.setState (previousState => ({
+      imagePointer : imagePointer,
+      imageToShow: this.state.list[imagePointer]
+    }));
+}
+
   render() {
     return (
       <View style={styles.page}>
@@ -134,14 +158,24 @@ export default class HelloWorldApp extends Component {
           </View>
         </View>
         <View style={styles.userCardArea}>
-          <View style={styles.userCard}></View>
+          <View style={styles.userCard}>
+            <Image
+              source={this.state.profilePic}
+              style={styles.profilePic}
+            />
+          </View>
         </View>
         <View style={styles.matchCardArea}>
-          <Text style={styles.matchNavigationButtonLeft}>
+          <Text style={styles.matchNavigationButtonLeft} onPress={this.onPressHandlerLeft}>
             {"<"}
           </Text>
-          <View style={styles.matchCard}></View>
-          <Text style={styles.matchNavigationButtonRight}>
+            <View style={styles.matchCard}>
+              <Image
+                source={this.state.imageToShow}
+                style={styles.profilePic}
+              />
+            </View>
+          <Text style={styles.matchNavigationButtonRight} onPress={this.onPressHandlerRight}>
             {">"}
           </Text>
         </View>
