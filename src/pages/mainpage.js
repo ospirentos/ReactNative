@@ -1,26 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
+import Navbar from '../components/navbar';
 
 
 const styles = StyleSheet.create({
-  text: {
-    color:'#e5efff',
-    fontWeight: 'bold',
-    fontSize: 50,
-    textAlign: 'center'
-  },
-  button: {
-    height:60,
-    width: 100,
-    backgroundColor: 'skyblue'
-  },
-  navbar: {
-    height:60,
-    flex:1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    backgroundColor: '#ddeaff'
-  },
   page: {
     flex:1
   },
@@ -80,35 +63,13 @@ const styles = StyleSheet.create({
   }
 });
 
-class Blink extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isShowingText: true};
-
-    setInterval(() => (
-      this.setState(previousState => (
-        { isShowingText: !previousState.isShowingText }
-      ))
-    ),1000);
-  }
-  render() {
-    if (!this.state.isShowingText) {
-      return null;
-    }
-
-    return (
-      <Text style={styles.text}>{this.props.text}</Text>
-    )
-  }
-}
-
 export default class HelloWorldApp extends Component {
   constructor(props) {
-    const image1 = require('./static/profilepic1.jpg');
-    const image2 = require('./static/profilepic2.jpg');
-    const image3 = require('./static/profilepic3.jpg');
-    const image4 = require('./static/profilepic4.jpg');
-    const image5 = require('./static/profilepic5.jpg');
+    const image1 = require('../static/profilepic1.jpg');
+    const image2 = require('../static/profilepic2.jpg');
+    const image3 = require('../static/profilepic3.jpg');
+    const image4 = require('../static/profilepic4.jpg');
+    const image5 = require('../static/profilepic5.jpg');
     let listOfImages = [];
     listOfImages.push(image2);
     listOfImages.push(image3);
@@ -141,22 +102,17 @@ export default class HelloWorldApp extends Component {
       imagePointer : imagePointer,
       imageToShow: this.state.list[imagePointer]
     }));
-}
+  }
+
+  handlePress = () => {
+    console.warn("Pressed");
+  }
 
   render() {
+    const {navigate} = this.props.navigation;
     return (
       <View style={styles.page}>
-        <View style={styles.navbar}>
-          <View style={styles.button}>
-            <Blink text='A' />
-          </View>
-          <View style={styles.button}>
-            <Blink text='B' />
-          </View>
-          <View style={styles.button}>
-            <Blink text='C' />
-          </View>
-        </View>
+        <Navbar navigate={navigate}/>
         <View style={styles.userCardArea}>
           <View style={styles.userCard}>
             <Image
