@@ -35,7 +35,7 @@ export default class Navbar extends Component {
           <Text style={styles.text} onPress={() => navigate('Home')}>B</Text>
         </View>
         <View style={styles.button}>
-        <Text style={styles.text}>C</Text>
+          <Text style={styles.text} onPress={() => navigate('Messages')}>C</Text>
         </View>
       </View>
       );

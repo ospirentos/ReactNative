@@ -102,6 +102,11 @@ export default class HelloWorldApp extends Component {
       imagePointer : imagePointer,
       imageToShow: this.state.list[imagePointer]
     }));
+
+
+    
+
+
   }
 
   handlePress = () => {

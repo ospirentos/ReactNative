@@ -48,14 +48,22 @@ const styles = StyleSheet.create({
         height:100,
         borderRadius:10,
         backgroundColor: "white",
-        top:80
+        top:80,
+        flexDirection: 'row',
     },
     demands: {
         width:250,
         height:100,
         borderRadius:10,
         backgroundColor: "white",
-        top:120
+        top:120,
+        flexDirection:"row"
+    },
+    skillIcons: {
+        alignSelf: 'flex-start',
+        height:50,
+        width:50,
+        margin:5,
     }
     
 });
@@ -67,13 +75,31 @@ export default class ProfilePage extends Component {
             name: "Oguzhan",
             surname: "Kocaturk",
             age: 25,
-            skills: ["guitar", "piano" ],
+            skills: ["guitar", "piano", "yoga" ],
             demands: ["drawing", "writing"],
             images: require('../static/oguzhanpic.jpg')
         }
         this.state = {
-            user: user
+            user: user,
+            skills: <View></View>
         }
+    }
+    componentDidMount() {
+        let skillSymbolList = this.state.user.skills.map((skill) =>  {
+            if (skill === "guitar") {
+                return <Image key={skill.toString()} style={styles.skillIcons} source={require('../static/guitar.png')}/>
+            } else if (skill === "piano") {
+                return <Image key={skill.toString()} style={styles.skillIcons} source={require('../static/piano.png')}/>
+            } else if (skill === "writing") {
+                return <Image key={skill.toString()} style={styles.skillIcons} source={require('../static/writing.png')}/>
+            } else if (skill === "yoga") {
+                return <Image key={skill.toString()} style={styles.skillIcons} source={require('../static/yoga.png')}/>
+            }
+        });
+        skillSymbolList = <View style={styles.skills}>{skillSymbolList}</View>
+        this.setState({
+            skills: skillSymbolList
+        });
     }
     render() {
         const {navigate} = this.props.navigation;
@@ -89,8 +115,11 @@ export default class ProfilePage extends Component {
                         <Text style={styles.surname}>{this.state.user.surname}</Text>
                         <Text style={styles.age}>, {this.state.user.age}</Text>
                     </View>
-                    <View style={styles.skills}></View>
-                    <View style={styles.demands}></View>
+                    {this.state.skills}
+                    <View style={styles.demands}>
+                        <Image style={styles.skillIcons} source={require('../static/piano.png')}/>
+                        <Image style={styles.skillIcons} source={require('../static/yoga.png')}/>
+                    </View>
             
                 </View>
             </View>

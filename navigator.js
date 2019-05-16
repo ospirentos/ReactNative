@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import MainPage from './src/pages/mainpage'
 import ProfilePage from './src/pages/profilepage'
+import MessagesPage from './src/pages/messages'
 
 class HomeScreen extends React.Component {
   render() {
@@ -22,6 +23,9 @@ const AppNavigator = createStackNavigator(
   ProfilePage: {
     screen: ProfilePage
   },
+  Messages: {
+    screen: MessagesPage
+  }
   },{
   defaultNavigationOptions: {
     header: null
