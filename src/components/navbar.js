@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
-import { tsPropertySignature } from '@babel/types';
 
 const styles = StyleSheet.create({
   navbar: {
