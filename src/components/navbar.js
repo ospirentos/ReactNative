@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 const styles = StyleSheet.create({
   navbar: {
     height:60,
+    minHeight:30,
     flex:1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
