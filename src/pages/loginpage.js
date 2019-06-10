@@ -3,68 +3,12 @@ import { Keyboard ,Text, View, StyleSheet, Image, ImageBackground, TextInput, Ke
 import hash from 'hash.js';
 import backgroundImage from '../static/background_login.png'
 import logo from '../static/logo.png'
+import InputForm from '../components/inputform'
 
 const styles = StyleSheet.create({
     body: {
         flex:1,
-        justifyContent: "center",
-    },
-    loginFormNoSoftKeyboard: {
-        width:270,
-        height:230,
-        top:30,
-        left:70,
-    },
-    loginFormSoftKeyboard: {
-        width:270,
-        height:230,
-        top:30,
-        left:70,
-        paddingBottom:320
-    },
-    input: {
-        height: 35,
-        borderColor: "white",
-        borderWidth: 1,
-        padding:0,
-        paddingLeft:5,
-        backgroundColor:"white",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 3,
-    },
-    submitButton: {
-        backgroundColor: "#1ab7f1",
-        width:90,
-        height:30,
-        marginLeft:90,
-        marginTop:15,
-        textAlign: "center",
-        textAlignVertical: "center",
-        borderRadius: 5,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
-    },
-    textLabel: {
-        fontSize: 20,
-        color: "#f4f9fc"
-        
-    },
-    textFoot: {
-        fontSize: 15,
-        top:15,
-        left: 5,
+        justifyContent: "center"
     },
     logo: {
         padding:0,
@@ -116,24 +60,7 @@ export default class LoginPage extends Component {
         return (
                 <ImageBackground source={backgroundImage} style={styles.body}>
                         <Image source={logo} style={styles.logo}></Image>
-                        <View style={this.state.keyboardState ? styles.loginFormSoftKeyboard : styles.loginFormNoSoftKeyboard}>
-                            <Text style={styles.textLabel}>Username:</Text>
-                            <TextInput 
-                                style={styles.input} 
-                                keyboardType="email-address"
-                                onChangeText={(username) => this.setState({username})}
-                                value={this.state.username}>
-                            </TextInput>
-                            <Text style="height:15"></Text>
-                            <Text style={styles.textLabel}>Password:</Text>
-                            <TextInput 
-                                style={styles.input} 
-                                secureTextEntry={true}
-                                onChangeText={(password) => this.setState({password})}
-                                value={this.state.password}></TextInput>
-                            <Text style={styles.submitButton} onPress={this.handlerSubmit}>Login</Text>
-                            <Text style={styles.textFoot} onPress={()=>navigate("SignUp")}>Have no account? Sign Up!</Text>
-                        </View>
+                        <InputForm navigation={navigate} type="Login"/>
                 </ImageBackground>
         );
     }
