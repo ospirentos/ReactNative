@@ -33,6 +33,15 @@ export default class InputBox extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        prevProps = this.props
+        if (nextProps.label !== this.props.label) {
+            this.setState({
+                username: ""
+            })
+        }
+    }
+
     sendInput = (props) => {
         this.setState({
             username: props.username

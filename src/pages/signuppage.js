@@ -3,6 +3,7 @@ import {Text, View, Image, StyleSheet, ImageBackground, ScrollView} from 'react-
 import logo from '../static/logo_signup.png'
 import backgroundImage from '../static/background_login.png'
 import InputForm from '../components/inputform'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
     body:{
@@ -10,18 +11,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     logo: {
-        height:45,
-        width:226,
+        position:"absolute",
+        height:hp('7%'),
+        width:wp('60%'),
         padding:0,
         margin:0,
-        top:50,
-        left:85,
+        top:hp('5%'),
+        left:wp('20%'),
         borderWidth:1,
         borderColor:"white"
     },
-    test: {
-        top:0
-    }
 });
 
 export default class LoginPage extends Component {

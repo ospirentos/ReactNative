@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import { Keyboard ,Text, View, StyleSheet, Image, ImageBackground, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
 import hash from 'hash.js';
-import backgroundImage from '../static/background_login.png'
+import backgroundImage from '../static/background.png'
 import logo from '../static/logo.png'
 import InputForm from '../components/inputform'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
     body: {
@@ -16,6 +17,11 @@ const styles = StyleSheet.create({
         left:65,
         height:106,
         width:278
+    },
+    blurBackground: {
+        backgroundColor: "#ffffff",
+        height:hp('50%'),
+        width: wp('70%'),
     }
 });
 

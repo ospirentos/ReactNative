@@ -17,25 +17,25 @@ const styles = StyleSheet.create({
         left:70,
         marginBottom:90
     },
-    loginFormScrollNoSoftKeyboard: {
-        width:270,
-        height:100,
-        top:150,
-        left:70,
-    },
-    loginFormScrollSoftKeyboard: {
+    signUpFormNoSoftKeyboard: {
         width:270,
         height:230,
         top:30,
         left:70,
-        marginBottom:90
+    },
+    signUpFormSoftKeyboard: {
+        width:270,
+        height:230,
+        top:30,
+        left:70,
+        marginBottom:30
     },
     submitButton: {
         backgroundColor: "#1ab7f1",
-        width:90,
+        width:200,
         height:30,
-        marginLeft:90,
-        marginTop:15,
+        marginLeft:30,
+        marginTop:10,
         textAlign: "center",
         textAlignVertical: "center",
         borderRadius: 5,
@@ -153,7 +153,7 @@ export default class InputForm extends Component {
         }
         else if (this.state.formType === "SignUp") {
             return(
-                <View style={this.state.keyboardState ? styles.loginFormScrollSoftKeyboard : styles.loginFormScrollNoSoftKeyboard}>
+                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
                     <InputBox label="Name" type={1} hide={false} returnData={this.callbackFromChild}/>
                     <InputBox label="Surname" type={1} hide={false} returnData={this.callbackFromChild}/>
                     <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
@@ -163,7 +163,7 @@ export default class InputForm extends Component {
         }
         else if (this.state.formType === "Step2") {
             return(
-                <View style={this.state.keyboardState ? styles.loginFormScrollSoftKeyboard : styles.loginFormScrollNoSoftKeyboard}>
+                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
                     <InputBox label="E-mail" type={2} hide={false} returnData={this.callbackFromChild}/>
                     <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
                 </View>
@@ -172,7 +172,7 @@ export default class InputForm extends Component {
         }
         else if (this.state.formType === "Step3") {
             return (
-                <View style={this.state.keyboardState ? styles.loginFormScrollSoftKeyboard : styles.loginFormScrollNoSoftKeyboard}>
+                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
                 <InputBox label="Username" type={1} hide={false} returnData={this.callbackFromChild}/>
                 <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild}/>
                 <InputBox label="Verify Password" type={1} hide={true} returnData={this.callbackFromChild}/>
