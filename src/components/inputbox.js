@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { Keyboard ,Text, View, StyleSheet, Image, ImageBackground, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
     input: {
@@ -7,7 +8,7 @@ const styles = StyleSheet.create({
         borderColor: "white",
         borderWidth: 1,
         padding:0,
-        paddingLeft:5,
+        paddingLeft:0,
         backgroundColor:"white",
         shadowColor: "#000",
         shadowOffset: {

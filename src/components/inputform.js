@@ -2,19 +2,20 @@ import React, {Component} from 'react'
 import { Keyboard ,Text, View, StyleSheet, Image, ScrollView, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
 import InputBox from './inputbox'
 import hash from 'hash.js';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
     loginFormNoSoftKeyboard: {
-        width:270,
+        width:wp('55%'),
         height:230,
         top:30,
-        left:70,
+        left:wp('7%'),
     },
     loginFormSoftKeyboard: {
-        width:270,
+        width:wp('55%'),
         height:230,
         top:30,
-        left:70,
+        left:wp('7%'),
         marginBottom:90
     },
     signUpFormNoSoftKeyboard: {
@@ -32,9 +33,9 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         backgroundColor: "#1ab7f1",
-        width:200,
+        width:wp('50%'),
         height:30,
-        marginLeft:30,
+        marginLeft:wp('3%'),
         marginTop:10,
         textAlign: "center",
         textAlignVertical: "center",
@@ -50,8 +51,8 @@ const styles = StyleSheet.create({
     },
     textFoot: {
         fontSize: 15,
-        top:15,
-        left: 5,
+        top:hp('3%'),
+        left: wp('6%'),
     }
 });
 
@@ -63,7 +64,8 @@ export default class InputForm extends Component {
             password: "",
             keyboardState: false,
             formData: {},
-            formType: this.props.type
+            formType: this.props.type,
+            data:""
         }
     }
     componentWillMount () {
@@ -82,8 +84,6 @@ export default class InputForm extends Component {
             username: this.state.username,
             password: hash.sha256().update(this.state.password).digest('hex')
         }
-        const jsonUserCredentals = JSON.stringify(userCredentals)
-        console.warn(jsonUserCredentals)
         const serverResponse = true
         if (serverResponse === true) {
             navigate("Home")
@@ -111,7 +111,7 @@ export default class InputForm extends Component {
                 password: hash.sha256().update(this.state.password).digest('hex')
             }
             const jsonUserCredentals = JSON.stringify(userCredentals)
-            console.warn(jsonUserCredentals)
+            
         }
     }
 
