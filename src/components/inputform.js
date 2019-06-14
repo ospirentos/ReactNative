@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Keyboard ,Text, View, StyleSheet, Image, ScrollView, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
+import { Keyboard ,Text, View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import InputBox from './inputbox'
 import hash from 'hash.js';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
@@ -71,7 +71,8 @@ export default class InputForm extends Component {
             keyboardState: false,
             formData: {},
             formType: this.props.type,
-            data:""
+            data:"",
+            waiting: false
         }
     }
     componentWillMount () {
@@ -96,15 +97,19 @@ export default class InputForm extends Component {
 
     handlerSubmitLogin = () => {
         const navigate = this.props.navigation
+        let serverResponse = false;
 
         if (!this.validateEmail(this.state.username)) {
             Alert.alert('Wrong email format! Please enter a valid email address');
         } else {
             const userCredentals = {
-                username: this.state.username,
+                email: this.state.username,
                 password: hash.sha256().update(this.state.password).digest('hex')
             }
-            fetch('http://192.168.43.94:80/api/logincheck', {
+            this.setState({
+                waiting:true
+            })
+            fetch('http://192.168.1.110:80/api/logincheck', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -114,16 +119,24 @@ export default class InputForm extends Component {
             }).then(function(response){ 
                 return response.json();   
                })
-               .then(function(data){ 
-               console.warn(data)
-               });
-            const serverResponse = true
-            if (serverResponse === true) {
-                navigate("Home")
-            }
-            else {
-                Alert.alert('Wrong username or password!')
-            }
+               .then(function(result){ 
+                    if (result === true) {
+                        navigate("Home")
+                    }
+                    else {
+                        Alert.alert('Wrong username or password!')
+                    }
+               })
+               .then(function(){
+                    this.setState({
+                        waiting:false
+                    })
+               })
+               .catch(error => {
+                    this.setState({
+                        waiting:false
+                    })
+               })
         }
 
     }
@@ -182,7 +195,9 @@ export default class InputForm extends Component {
                     <InputBox label="Username" type={2} hide={false} returnData={this.callbackFromChild}/>
                     <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild}/>
                     <View style={styles.textFoot}>
+                        {this.state.waiting ? <ActivityIndicator size="large" color="#0000ff" /> :
                         <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
+                        }
                         <Text style={styles.text} onPress={()=>navigate("SignUp")}>Have no account? Sign Up!</Text>
                     </View>
                     
