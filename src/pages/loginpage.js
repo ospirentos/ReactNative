@@ -55,7 +55,14 @@ export default class LoginPage extends Component {
             username: this.state.username,
             password: hash.sha256().update(this.state.password).digest('hex')
         }
-        const jsonUserCredentals = JSON.stringify(userCredentals)
+        fetch('https://161.9.69.124:80/api/logincheck', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userCredentals),
+        });
         const serverResponse = false
         if (serverResponse === true) {
             navigate("Home")

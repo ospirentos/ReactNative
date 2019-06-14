@@ -104,6 +104,19 @@ export default class InputForm extends Component {
                 username: this.state.username,
                 password: hash.sha256().update(this.state.password).digest('hex')
             }
+            fetch('http://192.168.43.94:80/api/logincheck', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userCredentals),
+            }).then(function(response){ 
+                return response.json();   
+               })
+               .then(function(data){ 
+               console.warn(data)
+               });
             const serverResponse = true
             if (serverResponse === true) {
                 navigate("Home")
