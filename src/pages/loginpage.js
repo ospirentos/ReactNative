@@ -9,21 +9,23 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 const styles = StyleSheet.create({
     body: {
         flex:1,
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center"
     },
     logo: {
         padding:0,
-        top:wp('5%'),
-        left:wp('10%'),
+        //left:wp('10%'),
         height:hp('11%'),
-        width:wp('50%')
+        width:wp('60%')
     },
     blurBackground: {
         backgroundColor: "#ffffff3d",
-        height:hp('70%'),
-        width: wp('70%'),
-        left:wp('15%'),
-        borderRadius:17
+        height:hp('50%'),
+        width: wp('90%'),
+        //left:wp('15%'),
+        borderRadius:17,
+        alignItems: "center",
+        justifyContent: "center"
     }
 });
 
@@ -40,7 +42,6 @@ export default class LoginPage extends Component {
     componentWillMount () {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', ()=> this.setState({keyboardState:true}));
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', ()=> this.setState({keyboardState:false}));
-        console.warn(hp('35%') / wp('21%'))
     }
     
       componentWillUnmount () {
@@ -66,7 +67,7 @@ export default class LoginPage extends Component {
     
     render() {
         const {navigate} = this.props.navigation;
-        const style={height: wp('50%') / 2.76}
+        const style={height: wp('60%') / 2.76}
         const styleLogo = StyleSheet.flatten([styles.logo, style]);
         return (
                 <ImageBackground source={backgroundImage} style={styles.body}>

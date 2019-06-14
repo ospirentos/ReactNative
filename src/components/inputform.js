@@ -6,37 +6,38 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const styles = StyleSheet.create({
     loginFormNoSoftKeyboard: {
-        width:wp('55%'),
+        width:wp('65%'),
         height:230,
         top:30,
-        left:wp('7%'),
+        left:0,
     },
     loginFormSoftKeyboard: {
         width:wp('55%'),
         height:230,
         top:30,
-        left:wp('7%'),
+        left:0,
         marginBottom:90
     },
     signUpFormNoSoftKeyboard: {
         width:270,
         height:230,
         top:30,
-        left:70,
+        left:0,
     },
     signUpFormSoftKeyboard: {
         width:270,
         height:230,
         top:30,
-        left:70,
+        left:0,
         marginBottom:30
     },
     submitButton: {
         backgroundColor: "#1ab7f1",
         width:wp('50%'),
         height:30,
-        marginLeft:wp('3%'),
-        marginTop:10,
+        //marginLeft:wp('3%'),
+        marginTop:hp(1),
+        marginBottom:hp(3),
         textAlign: "center",
         textAlignVertical: "center",
         borderRadius: 5,
@@ -51,8 +52,13 @@ const styles = StyleSheet.create({
     },
     textFoot: {
         fontSize: 15,
-        top:hp('3%'),
-        left: wp('6%'),
+        top:hp(0),
+        left: 0,
+        alignItems: "center"
+    },
+    text: {
+        padding:0,
+        margin:0,
     }
 });
 
@@ -78,19 +84,35 @@ export default class InputForm extends Component {
         this.keyboardDidHideListener.remove();
     }
 
+    validateEmail = (email) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
+
+    validatePassword = (password) => {
+        var re= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{8,15}$/;
+        return re.test(password)
+    }
+
     handlerSubmitLogin = () => {
         const navigate = this.props.navigation
-        const userCredentals = {
-            username: this.state.username,
-            password: hash.sha256().update(this.state.password).digest('hex')
+
+        if (!this.validateEmail(this.state.username)) {
+            Alert.alert('Wrong email format! Please enter a valid email address');
+        } else {
+            const userCredentals = {
+                username: this.state.username,
+                password: hash.sha256().update(this.state.password).digest('hex')
+            }
+            const serverResponse = true
+            if (serverResponse === true) {
+                navigate("Home")
+            }
+            else {
+                Alert.alert('Wrong username or password!')
+            }
         }
-        const serverResponse = true
-        if (serverResponse === true) {
-            navigate("Home")
-        }
-        else {
-            Alert.alert('Wrong username or password!')
-        }
+
     }
 
     handlerSubmitSignUp = () => {
@@ -143,11 +165,14 @@ export default class InputForm extends Component {
         const navigate = this.props.navigation
         if (this.state.formType === "Login") {
             return(
-                <View style={this.state.keyboardState ? styles.loginFormSoftKeyboard : styles.loginFormNoSoftKeyboard}>
+                <View style={styles.loginFormNoSoftKeyboard}>
                     <InputBox label="Username" type={2} hide={false} returnData={this.callbackFromChild}/>
                     <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild}/>
-                    <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
-                    <Text style={styles.textFoot} onPress={()=>navigate("SignUp")}>Have no account? Sign Up!</Text>
+                    <View style={styles.textFoot}>
+                        <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
+                        <Text style={styles.text} onPress={()=>navigate("SignUp")}>Have no account? Sign Up!</Text>
+                    </View>
+                    
                 </View>
             );
         }

@@ -8,16 +8,17 @@ const styles = StyleSheet.create({
         borderColor: "white",
         borderWidth: 1,
         padding:0,
-        paddingLeft:0,
-        backgroundColor:"white",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 3,
+        paddingLeft:wp(3),
+        backgroundColor:"#00000000",
+        borderRadius: 17,
+        //shadowColor: "#000",
+        //shadowOffset: {
+        //    width: 0,
+        //    height: 2,
+        //},
+        //shadowOpacity: 0.25,
+        //shadowRadius: 3.84,
+        //elevation: 3,
     },
     textLabel: {
         fontSize: 20,
@@ -57,14 +58,15 @@ export default class InputBox extends Component {
     render () {
         return(
             <View>
-                <Text style={styles.textLabel}>{this.props.label}:</Text>
                 <TextInput 
                     style={styles.input}
                     keyboardType={this.props.type === 1 ? "default" :
                     this.props.type===2 ? "email-address" : "number-pad"}
                     secureTextEntry={this.props.hide}
                     onChangeText={(username) => this.sendInput({username})}
-                    value={this.state.username}>
+                    value={this.state.username}
+                    placeholder={this.props.label}
+                >
                 </TextInput>
                 <Text style="height:15"></Text>
             </View>
