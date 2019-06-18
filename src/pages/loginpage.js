@@ -44,10 +44,10 @@ export default class LoginPage extends Component {
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', ()=> this.setState({keyboardState:false}));
     }
     
-      componentWillUnmount () {
+    componentWillUnmount () {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
-      }
+    }
 
     handlerSubmit = () => {
         const {navigate} = this.props.navigation;

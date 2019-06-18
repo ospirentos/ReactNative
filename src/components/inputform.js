@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
-import { Keyboard ,Text, View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
+import React, { Component } from 'react'
+import { Keyboard, Text, View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import InputBox from './inputbox'
 import hash from 'hash.js';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const styles = StyleSheet.create({
     loginFormNoSoftKeyboard: {
@@ -72,7 +73,8 @@ export default class InputForm extends Component {
             formData: {},
             formType: this.props.type,
             data:"",
-            waiting: false
+            waiting: false,
+            showLoginPage: false
         }
     }
     componentWillMount () {
@@ -83,6 +85,9 @@ export default class InputForm extends Component {
     componentWillUnmount () {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
+    }
+    
+    componentDidMount () {
     }
 
     validateEmail = (email) => {
@@ -95,9 +100,58 @@ export default class InputForm extends Component {
         return re.test(password)
     }
 
+    getData = async (props) => {
+        const navigate = this.props.navigation
+        try {
+            const value = await AsyncStorage.getItem('loginToken')
+            if (value !== null) {
+                const jsonData = {
+                    token : value
+                };
+                fetch('http://192.168.1.110:80/api/tokencheck', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+            }).then(function(response) {
+                console.warn(response);
+                return response.json();
+            }).then((result) =>  {
+                console.warn(result)
+            })
+                navigate("Home")
+                return false;
+            }
+            else {
+                return true;
+            }
+        } catch (e) {
+            console.error(e.message)
+        }
+    }
+
+    clearAll = async () => {
+        try {
+            await AsyncStorage.clear()
+        } catch (e) {
+            // clear error
+        }
+
+        console.log('Done.')
+    }
+
+    setValue = async (props) => {
+        try {
+            await AsyncStorage.setItem('loginToken', props)
+            console.warn("Token has been properly placed.")
+        } catch (e) {
+            console.error(e.message);
+        }
+    }
     handlerSubmitLogin = () => {
         const navigate = this.props.navigation
-        let serverResponse = false;
 
         if (!this.validateEmail(this.state.username)) {
             Alert.alert('Wrong email format! Please enter a valid email address');
@@ -116,26 +170,30 @@ export default class InputForm extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userCredentals),
-            }).then(function(response){ 
+            }).then(function(response) { 
                 return response.json();   
                })
-               .then(function(result){ 
-                    if (result === true) {
+                .then((result) => {
+                    if (result.success === true) {
+                        const token = result.token;
+                        (async () => {
+                            await this.setValue(token)
+                        })();
                         navigate("Home")
                     }
                     else {
+                        console.warn(result.token)
+                        console.warn(result.success)
                         Alert.alert('Wrong username or password!')
                     }
                })
-               .then(function(){
+               .then(() => {
                     this.setState({
                         waiting:false
                     })
                })
                .catch(error => {
-                    this.setState({
-                        waiting:false
-                    })
+                   console.error(error.message);
                })
         }
 
@@ -189,49 +247,55 @@ export default class InputForm extends Component {
 
     render() {
         const navigate = this.props.navigation
-        if (this.state.formType === "Login") {
-            return(
-                <View style={styles.loginFormNoSoftKeyboard}>
-                    <InputBox label="Username" type={2} hide={false} returnData={this.callbackFromChild}/>
-                    <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild}/>
-                    <View style={styles.textFoot}>
-                        {this.state.waiting ? <ActivityIndicator size="large" color="#0000ff" /> :
-                        <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
-                        }
-                        <Text style={styles.text} onPress={()=>navigate("SignUp")}>Have no account? Sign Up!</Text>
+        if (this.getData()) {
+            if (this.state.formType === "Login") {
+                return (
+                    <View style={styles.loginFormNoSoftKeyboard}>
+                        <InputBox label="Username" type={2} hide={false} returnData={this.callbackFromChild} />
+                        <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild} />
+                        <View style={styles.textFoot}>
+                            {this.state.waiting ? <ActivityIndicator size="large" color="#0000ff" /> :
+                                <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
+                            }
+                            <Text style={styles.text} onPress={() => navigate("SignUp")}>Have no account? Sign Up!</Text>
+                        </View>
+    
                     </View>
-                    
-                </View>
-            );
+                );
+            }
+            else if (this.state.formType === "SignUp") {
+                return (
+                    <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
+                        <InputBox label="Name" type={1} hide={false} returnData={this.callbackFromChild} />
+                        <InputBox label="Surname" type={1} hide={false} returnData={this.callbackFromChild} />
+                        <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
+                        <Text style={styles.textFoot} onPress={() => navigate("SignUp")}>Already have an account? Sign In!</Text>
+                    </View>
+                );
+            }
+            else if (this.state.formType === "Step2") {
+                return (
+                    <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
+                        <InputBox label="E-mail" type={2} hide={false} returnData={this.callbackFromChild} />
+                        <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
+                    </View>
+                );
+    
+            }
+            else if (this.state.formType === "Step3") {
+                return (
+                    <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
+                        <InputBox label="Username" type={1} hide={false} returnData={this.callbackFromChild} />
+                        <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild} />
+                        <InputBox label="Verify Password" type={1} hide={true} returnData={this.callbackFromChild} />
+                        <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Finish!</Text>
+                    </View>
+                );
+            }
+        } else {
+            return (<View></View>);
         }
-        else if (this.state.formType === "SignUp") {
-            return(
-                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
-                    <InputBox label="Name" type={1} hide={false} returnData={this.callbackFromChild}/>
-                    <InputBox label="Surname" type={1} hide={false} returnData={this.callbackFromChild}/>
-                    <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
-                    <Text style={styles.textFoot} onPress={()=>navigate("SignUp")}>Already have an account? Sign In!</Text>
-                </View>
-            );
-        }
-        else if (this.state.formType === "Step2") {
-            return(
-                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
-                    <InputBox label="E-mail" type={2} hide={false} returnData={this.callbackFromChild}/>
-                    <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Next!</Text>
-                </View>
-            );
-            
-        }
-        else if (this.state.formType === "Step3") {
-            return (
-                <View style={this.state.keyboardState ? styles.signUpFormSoftKeyboard : styles.signUpFormNoSoftKeyboard}>
-                <InputBox label="Username" type={1} hide={false} returnData={this.callbackFromChild}/>
-                <InputBox label="Password" type={1} hide={true} returnData={this.callbackFromChild}/>
-                <InputBox label="Verify Password" type={1} hide={true} returnData={this.callbackFromChild}/>
-                <Text style={styles.submitButton} onPress={this.handlerSubmitSignUp}>Finish!</Text>
-                </View>
-            );
-        }
+        
     }
+        
 }
