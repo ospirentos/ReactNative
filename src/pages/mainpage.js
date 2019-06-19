@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Button } from 'react-native';
 import Navbar from '../components/navbar';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 const styles = StyleSheet.create({
@@ -102,11 +103,17 @@ export default class HelloWorldApp extends Component {
       imagePointer : imagePointer,
       imageToShow: this.state.list[imagePointer]
     }));
+  }
 
-
-    
-
-
+  removeKey = async () => {
+    const {navigate} = this.props.navigation;
+    try {
+      await AsyncStorage.removeItem('loginToken');
+      navigate("Login");
+    } catch(e) {
+      console.error(e);
+    }
+    console.log('Token has ben cleared.')
   }
 
   handlePress = () => {
@@ -140,6 +147,7 @@ export default class HelloWorldApp extends Component {
             {">"}
           </Text>
         </View>
+        <Button style={styles.removeButton} onPress={this.removeKey} title="Logout"></Button>
       </View>
       
     );

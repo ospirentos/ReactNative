@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
-import { Keyboard ,Text, View, StyleSheet, Image, ImageBackground, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import React, { Component } from 'react'
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
     input: {
         height: 35,
         borderColor: "white",
         borderWidth: 1,
-        padding:0,
-        paddingLeft:wp(3),
-        backgroundColor:"#00000000",
+        padding: 0,
+        paddingLeft: wp(3),
+        backgroundColor: "#00000000",
         borderRadius: 17,
         //shadowColor: "#000",
         //shadowOffset: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     textLabel: {
         fontSize: 20,
         color: "#f4f9fc"
-        
+
     }
 });
 
@@ -31,7 +31,7 @@ export default class InputBox extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            username: ""
+            inputData: ""
         }
     }
 
@@ -39,32 +39,39 @@ export default class InputBox extends Component {
         prevProps = this.props
         if (nextProps.label !== this.props.label) {
             this.setState({
-                username: ""
+                inputData: ""
             })
         }
     }
 
     sendInput = (props) => {
         this.setState({
-            username: props.username
+            inputData: props.inputData
         });
+
         const returnObj = {
-            name : this.props.label,
-            data : props.username
+            name: this.props.label,
+            data: props.inputData
         }
         this.props.returnData(returnObj)
     }
 
-    render () {
-        return(
+    clearState = () => {
+        this.setState({
+            inputData:""
+        })
+    }
+
+    render() {
+        return (
             <View>
-                <TextInput 
+                <TextInput
                     style={styles.input}
                     keyboardType={this.props.type === 1 ? "default" :
-                    this.props.type===2 ? "email-address" : "number-pad"}
+                        this.props.type === 2 ? "email-address" : "number-pad"}
                     secureTextEntry={this.props.hide}
-                    onChangeText={(username) => this.sendInput({username})}
-                    value={this.state.username}
+                    onChangeText={(inputData) => this.sendInput({ inputData })}
+                    value={this.state.inputData}
                     placeholder={this.props.label}
                 >
                 </TextInput>
@@ -72,5 +79,5 @@ export default class InputBox extends Component {
             </View>
         );
     }
-    
+
 }
