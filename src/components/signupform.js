@@ -46,38 +46,70 @@ const styles = StyleSheet.create({
 export default class SignupForm extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            email: "",
+            waiting: false
+        }
+        this.emailInputBox = React.createRef();
+    }
+
+    handlerCheckEmail = () => {
+        const email = {
+            email:this.emailInputBox.current.getState() 
+        }
+        console.log(email);      
+        this.setState = ({
+            waiting: true
+        })
+        console.log("after state change")
+        fetch('http://172.16.1.40:80/api/emailcheck', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(email),
+        }).then(function (response) {
+            return response.json();
+        }).then((result) => {
+            if (result.success) {
+                console.log("True!")
+            } else {
+                console.log("False!")
+            }
+        }).catch(error => {
+            console.log("Error occured during email check!");
+            console.log("Error code:", error.message);
+        });
+    }
+
+    callbackFromChild = (data) => {
+        if (data.name === "Enter your email address") {
+            this.setState({
+                email: data.data
+            })
+        }
     }
 
     render() {
         const navigate = this.props.navigation
-        if (this.getData()) {
-            return (
-                <View style={styles.loginFormNoSoftKeyboard}>
-                    <InputBox
-                        label="Email"
-                        type={2}
-                        hide={false}
-                        returnData={this.callbackFromChild}
-                        ref={this.emailInputBox}
-                    />
-                    <InputBox
-                        label="Password"
-                        type={1}
-                        hide={true}
-                        returnData={this.callbackFromChild}
-                        ref={this.passwordInputBox}
-                    />
-                    <View style={styles.textFoot}>
-                        {this.state.waiting ? <ActivityIndicator size="large" color="#0000ff" /> :
-                            <Text style={styles.submitButton} onPress={this.handlerSubmitLogin}>Login</Text>
-                        }
-                        <Text style={styles.text} onPress={() => navigate("SignUp")}>Have no account? Sign Up!</Text>
-                    </View>
-
+        return (
+            <View style={styles.loginFormNoSoftKeyboard}>
+                <InputBox
+                    label="Enter your email address"
+                    type={2}
+                    hide={false}
+                    returnData={this.callbackFromChild}
+                    ref={this.emailInputBox}
+                />
+                <View style={styles.textFoot}>
+                    {this.state.waiting ? <ActivityIndicator size="large" color="#0000ff" /> :
+                        <Text style={styles.submitButton} onPress={this.handlerCheckEmail}>Check!</Text>
+                    }
+                    <Text style={styles.text} onPress={() => navigate("Login")}>Already have an account? Sign in!</Text>
                 </View>
-            );
-        } else {
-            return (<View></View>);
-        }
+
+            </View>
+        );
     }
 }

@@ -86,7 +86,7 @@ export default class InputForm extends Component {
                 const jsonData = {
                     token: value
                 };
-                fetch('http://10.155.20.79:80/api/tokencheck', {
+                fetch('http://172.16.1.40:80/api/tokencheck', {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
@@ -107,7 +107,8 @@ export default class InputForm extends Component {
                 return true;
             }
         } catch (e) {
-            console.error(e.message)
+            console.log("Connection to the login server has failed.");
+            console.log("Error code:", e.message)
         }
     }
 
@@ -142,7 +143,7 @@ export default class InputForm extends Component {
             this.setState({
                 waiting: true
             })
-            fetch('http://10.155.20.79:80/api/logincheck', {
+            fetch('http://172.16.1.40:80/api/logincheck', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -170,7 +171,8 @@ export default class InputForm extends Component {
                     })
                 })
                 .catch(error => {
-                    console.error(error.message);
+                    console.log("Connection to the login server has failed.");
+                    console.log("Error code:", error.message)
                 })
         }
 

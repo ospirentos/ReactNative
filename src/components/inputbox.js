@@ -62,6 +62,10 @@ export default class InputBox extends Component {
         })
     }
 
+    getState = () => {
+        return this.state.inputData;
+    }
+
     render() {
         return (
             <View>

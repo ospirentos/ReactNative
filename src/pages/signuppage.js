@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Text, View, Image, StyleSheet, ImageBackground, ScrollView} from 'react-native'
 import logo from '../static/logo_signup.png'
 import backgroundImage from '../static/background_login.png'
-import LoginForm from '../components/loginform'
+import SignupForm from '../components/signupform'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 
 const styles = StyleSheet.create({
@@ -35,7 +35,7 @@ export default class LoginPage extends Component {
             <ImageBackground source={backgroundImage} style={styles.body}>
                 <View style={styles.blurBackground}>
                     <Image source={logo} style={styleLogo}></Image>
-                    <LoginForm navigation={navigate} type="Login" />
+                    <SignupForm navigation={navigate} type="Login" />
                 </View>
             </ImageBackground>
         );
